@@ -3,7 +3,7 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import dayjs, { Dayjs } from 'dayjs';
 import { useTaskModal } from '../providers/TaskModalProvider';
 import { TaskModel } from '../model/TaskModel';
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify'
 import axios from 'axios';
 
 interface TaskModalProps {
@@ -41,7 +41,7 @@ const TaskModal: React.FC<TaskModalProps> = () => {
         };
         if (modalMode === 'edit' && taskData) {
             await axios.put(`${process.env.REACT_APP_SERVER}/api/tasks/${taskData._id}`, data).then((response) => {
-               toast.success('Task updated successfully');
+                toast.success('Task updated successfully');
             }).catch((error) => {
                 toast.error(error.message);
             })
@@ -52,8 +52,11 @@ const TaskModal: React.FC<TaskModalProps> = () => {
                 toast.error(error.message);
             })
         }
+        setTitle('');
+        setDescription('');
+        setDeadline(dayjs());
+        setPriority('');
         closeModal();
-        
     }
     const getSelectClass = (): string => {
         switch (priority) {
@@ -83,9 +86,9 @@ const TaskModal: React.FC<TaskModalProps> = () => {
             setDeadline(taskData.deadline ? dayjs(taskData.deadline) : dayjs());
             setPriority(taskData.priority || '');
         }
-    }, [modalMode, taskData]);
+    }, [isModalOpen]);
 
-    if (!isModalOpen) return null;
+    if (!isModalOpen) return null
 
     return (
         <div className='z-10 flex justify-center items-center absolute top-0 left-0 w-screen h-screen bg-gray-400 shadow-custom bg-opacity-50'>
@@ -138,11 +141,18 @@ const TaskModal: React.FC<TaskModalProps> = () => {
                     <button onClick={submitData} className='bg-[#4B00F7] py-2 px-8 w-fit mx-auto rounded-2xl text-white'>
                         {modalMode === 'edit' ? 'Update Task' : 'Assign Task'}
                     </button>
-                    <button onClick={closeModal} className='bg-red-600 py-2 px-8 w-fit mx-auto rounded-xl text-white'>
+                    <button onClick={() => {
+                        closeModal();
+                        setTitle('');
+                        setDescription('');
+                        setDeadline(dayjs());
+                        setPriority('');
+                    }
+                    } className='bg-red-600 py-2 px-8 w-fit mx-auto rounded-xl text-white'>
                         Cancel
                     </button>
                 </div>
-                
+
             </div>
         </div>
     );

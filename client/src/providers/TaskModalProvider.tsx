@@ -32,8 +32,9 @@ export const TaskModalProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
+    console.log(taskData)
     setTaskData(null); // Clear task data when closing the modal
+    setIsModalOpen(false);
   };
 
   return (
